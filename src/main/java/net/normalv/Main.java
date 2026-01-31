@@ -55,11 +55,11 @@ public class Main {
 
         // MAIN LOOP
         while(true) {
-            //if(!timer.passedMs(10)) continue;
+            if(!timer.passedMs(10)) continue;
             isRunning = true;
             render();
             bot.makeMoveRandom();
-            //timer.reset();
+            timer.reset();
         }
     }
 

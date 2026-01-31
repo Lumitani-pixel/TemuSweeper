@@ -3,8 +3,6 @@ package net.normalv.bot;
 import net.normalv.Main;
 import net.normalv.util.Tile;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class Bot {
