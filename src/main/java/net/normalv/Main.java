@@ -31,6 +31,7 @@ public class Main {
     private static int lossCounter = 0;
     private static int remainingSafeTiles;
     private static int lowestRemainingSafeTiles = height*width;
+    private static int moveCounter = 0;
 
     // SETTINGS
     private static boolean renderGrid = true;
@@ -55,11 +56,11 @@ public class Main {
 
         // MAIN LOOP
         while(true) {
-            if(!timer.passedMs(10)) continue;
+            //if(!timer.passedMs(10)) continue;
             isRunning = true;
             render();
-            bot.makeMoveRandom();
-            timer.reset();
+            bot.makeMoveSimple();
+            //timer.reset();
         }
     }
 
@@ -120,6 +121,7 @@ public class Main {
     private static void reset() {
         createMineField();
         isRunning = false;
+        moveCounter = 0;
     }
 
     private static void createMineField() {
@@ -131,7 +133,7 @@ public class Main {
             int y = random.nextInt(height);
             int x = random.nextInt(width);
 
-            while(mineField[y][x] != null && mineField[y][x].value() == -1) {
+            while(mineField[y][x] != null) {
                 y = random.nextInt(height);
                 x = random.nextInt(width);
             }
@@ -171,6 +173,8 @@ public class Main {
 
         // If it's a mine
         if (tile.value() == -1) {
+            moveCounter++;
+
             if (remainingSafeTiles < lowestRemainingSafeTiles) {
                 lowestRemainingSafeTiles = remainingSafeTiles;
                 System.out.println("Lowest Remaining Safe Tiles: " + lowestRemainingSafeTiles);
@@ -185,10 +189,13 @@ public class Main {
 
         // Safe tile: reveal it (flood fill)
         revealTile(y, x);
+        moveCounter++;
 
         // Check win condition
         if (remainingSafeTiles == 0) {
             winCounter++;
+            bestAttempt = mineField;
+            System.out.println("Won with "+moveCounter+" moves");
             reset();
         }
 
@@ -215,6 +222,7 @@ public class Main {
 
     public static boolean flagButton(int y, int x) {
         if(!mineField[y][x].hidden()) return false;
+        moveCounter++;
         mineField[y][x].setFlagged(true);
         return true;
     }
